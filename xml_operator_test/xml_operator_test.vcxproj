@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D78D37AE-2519-4C23-A29F-1A079C9B0D84}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Xml</RootNamespace>
+    <RootNamespace>xml_operator_test</RootNamespace>
     <ProjectName>test</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -59,7 +59,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>config_xml_operator.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xml_operator.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

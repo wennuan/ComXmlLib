@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "config_xml_operator_interface.h"
+#include "xml_operator_interface.h"
 #include <iostream>
 using namespace std;
 

@@ -129,80 +129,9 @@ COMMON_FUNCTION_LIB_API const std::string CFLAPI_AnsiToUtf8(const char* _ansi)
 	return utf8;
 }
 
-/************************************************************************************
-* @description:Utf8转Ansi
-* @param _utf8:需要转换的utf-8字符串
-* @return:ansi字符串 
-* @author:quhangfei
-* @date:2020年06月18日
-* @others:null 
-History:
-1.Date: 
-Author:  
-Modification: 
-************************************************************************************/
-COMMON_FUNCTION_LIB_API const std::string CFLAPI_Utf8ToAnsi(const char* _utf8)
-{
-	USES_CONVERSION;
 
-	std::string ansi;
-	if (!_utf8)
-	{
-		return ansi;
-	}
 
-	//将utf-8转换成unicode码
-	int len = MultiByteToWideChar(CP_UTF8, 0, _utf8, (int)strlen(_utf8),NULL, NULL);
-	WCHAR *pwText = new WCHAR[len + 1];
-	wmemset(pwText, 0, len + 1);
-	MultiByteToWideChar(CP_UTF8, 0, _utf8, (int)strlen(_utf8),pwText, len);
 
-	//将unicode码转换成ansi
-	ansi.assign(T2A(pwText));
-
-	delete pwText;
-
-	return ansi;
-}
-
-/************************************************************************************
-* @description:忽略大小写比较字符串
-* @param x:需要比较的字符串
-* @param y:需要比较的字符串
-* @return:true 相等;false 不相等
-* @author:quhangfei
-* @date:2020年06月18日
-* @others:null 
-History:
-1.Date: 
-Author:  
-Modification: 
-************************************************************************************/
-COMMON_FUNCTION_LIB_API bool CFLAPI_StringCompareNoCase(const std::string& x, const std::string& y)
-{
-    std::string::const_iterator p = x.begin();
-    std::string::const_iterator q = y.begin();
-
-    // 遍历对比每个字符
-    while (p != x.end() && q != y.end() && toupper(*p) == toupper(*q))
-    {
-        ++p;
-        ++q;
-    }
-
-    if (p == x.end()) // 如果x到结尾，y也到结尾则相等
-    {
-        return (q == y.end());
-    }
-
-    if (q == y.end()) // 如果x未到结尾，y到结尾返回false
-    {
-        return false;
-    }
-
-    // 如果x,y都没有到结尾，说明有不相同的字符，返回false
-    return false;
-}
 
 std::string CFLAPI_TCHAR2char( const TCHAR* STR)
 {

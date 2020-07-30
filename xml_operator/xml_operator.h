@@ -1,12 +1,12 @@
 /************************************************************************************
 Copyright: 
-File name:config_xml_operator.h
+File name:xml_operator.h
 Author:quhangfei
 Version:1.0
 Date:2020年07月05日
 Description:
-1)实现CConfigXmlOperator、CConfigOperator类；CConfigXmlOperator用于读取xml文件信息，
-  CConfigOperator保存所有的配置文件信息，避免重复读取
+1)实现CXml、COperator类；CXml用于读取xml文件信息，
+  COperator保存所有的配置文件信息，避免重复读取
 Others:无 
 History:
 1.Date:
@@ -19,12 +19,20 @@ Modification:
 #include <pugixml.hpp>
 #include <xml_construct_interface.h>
 
-//读取xml文件信息
-class CConfigXmlOperator
+//通用方法类
+class CommonFunction
 {
 public:
-	CConfigXmlOperator(const char* xml);
-	~CConfigXmlOperator();
+	static bool StringCompareNoCase(const std::string& x, const std::string& y);
+	static const std::string Utf8ToAnsi(const char* _utf8);
+};
+
+//读取xml文件信息
+class CXml
+{
+public:
+	CXml(const char* xml);
+	~CXml();
 private:
 	void Parse(void);
 	void Traverse(const pugi::xml_node& _node,XmlConstruct::_tagItem* _item);
@@ -43,12 +51,12 @@ private:
 };
 
 //保存所有已解析的XML信息
-class CConfigOperator
+class COperator
 {
 public:
-	virtual ~CConfigOperator();
+	virtual ~COperator();
 private:
-	std::vector<CConfigXmlOperator*> g_xml_config_data;//所有XML信息
+	std::vector<CXml*> xml_data;//所有XML信息
 	//根据XML文件相对路径，节点路径以及属性名称，获取属性的值
 	friend const char* CXOAPI_GetValue(const char* xml, const char* node_path, const char* name);
 	//根据XML文件相对路径和节点路径，获取节点结构

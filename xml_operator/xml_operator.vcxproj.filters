@@ -21,13 +21,13 @@
     <ClInclude Include="..\include\pugixml\pugixml.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="config_xml_operator.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="xml_operator.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,10 +35,10 @@
     <ClCompile Include="..\include\pugixml\pugixml.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="config_xml_operator.cpp">
+    <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="xml_operator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
