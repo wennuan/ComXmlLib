@@ -23,6 +23,6 @@ Modification:
 extern "C++"
 {
 	CONFIG_XML_OPERATOR_API const char* CXOAPI_GetValue(const char* xml, const char* node_path, const char* name);
-	CONFIG_XML_OPERATOR_API const XmlConstruct::ItemPtr CXOAPI_GetNode(const char* xml, const char* node_path);
+	CONFIG_XML_OPERATOR_API const XmlConstruct::ItemPtr CXOAPI_GetNode(const char* xml, const char* node_path = NULL);
 	CONFIG_XML_OPERATOR_API const XmlConstruct::ItemPtr CXOAPI_GetNode(const XmlConstruct::ItemPtr node, const char* node_path);
 }

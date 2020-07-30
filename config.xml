@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<gridctrl>
-		<!--column_width:GridCtrl列宽，当列宽不能完全显示字符时，可能会造成无法单元格选中问题-->
 		<param column_width="10"/>
 		<param column_width="10" column_height="20"/>
 		<param column_width="10"/>

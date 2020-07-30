@@ -19,19 +19,12 @@ Modification:
 #include <pugixml.hpp>
 #include <xml_construct_interface.h>
 
-class CommonFunction
-{
-public:
-	static bool StringCompareNoCase(const std::string& x, const std::string& y);
-	static const std::string Utf8ToAnsi(const char* _utf8);
-};
-
 //读取xml文件信息
 class CConfigXmlOperator
 {
 public:
 	CConfigXmlOperator(const char* xml);
-	~CConfigXmlOperator();	
+	~CConfigXmlOperator();
 private:
 	void Parse(void);
 	void Traverse(const pugi::xml_node& _node,XmlConstruct::_tagItem* _item);

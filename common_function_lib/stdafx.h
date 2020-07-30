@@ -11,4 +11,10 @@
 
 
 // TODO: 在此处引用程序需要的其他头文件
+//注意头文件顺序不能随意调整，可能造成编译不通过 added by quhangfei on 2020年07月3日
+#include <string>
+#include <vector>
+#include <atlconv.h>
+#include <algorithm>
 #include "macro.h"
+

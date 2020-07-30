@@ -14,8 +14,9 @@ Modification:
 ************************************************************************************/
 #include "stdafx.h"
 #include <config_xml_operator_interface.h>
+#include <common_function_lib_interface.h>
 #include "config_xml_operator.h"
-#include <atlconv.h>
+
 //全局变量，用于保存所有已解析的XML信息
 static CConfigOperator g_config_operator;
 
@@ -106,37 +107,37 @@ void CConfigXmlOperator::Traverse(const pugi::xml_node& _node,XmlConstruct::_tag
 	}
 
 	//转码
-	_item->name = CommonFunction::Utf8ToAnsi(_node.name());
+	_item->name = CFLAPI_Utf8ToAnsi(_node.name());
 
 	//保存当前节点属性
 	for (pugi::xml_attribute attr = _node.first_attribute(); attr; attr = attr.next_attribute())  
-    {  
-		_item->attributes.insert(std::make_pair(CommonFunction::Utf8ToAnsi(attr.name()), CommonFunction::Utf8ToAnsi(attr.value())));
-    }
+	{  
+		_item->attributes.insert(std::make_pair(CFLAPI_Utf8ToAnsi(attr.name()), CFLAPI_Utf8ToAnsi(attr.value())));
+	}
 
 	//获取子节点信息
 	pugi::xml_node& childNode = _node.first_child();
-	
+
 	XmlConstruct::ItemPtr p1 = NULL; //新节点的备份
 	XmlConstruct::ItemPtr p2 = NULL; //新节点的下一个节点
 
 	while (childNode)
 	{
 		XmlConstruct::ItemPtr p0 = new XmlConstruct::Item(); //新节点
-		
+
 		if (!p0)
 		{
 			break;
 		}
-		
+
 		p2 = p0;
 
 		Traverse(childNode, p0);
 
 		p0->parent = _item;
 
-		//如果容器不为空,最后一个节点则是即将插入节点的上一个节点
-		if (!_item->items.empty())
+		//如果容器不为空(即p1不是NULL),最后一个节点则是即将插入节点的上一个节点
+		if (NULL != p1)
 		{
 			p0->prev = *(_item->items.rbegin());
 		}
@@ -178,7 +179,7 @@ const XmlConstruct::ItemPtr CConfigXmlOperator::GetNode(std::string& name, const
 	}
 
 	//如果当前节点名称与iterPtr节点名称相等，则iterPtr是要查找的节点
-	if (CommonFunction::StringCompareNoCase(name, itemPtr->name))
+	if (CFLAPI_StringCompareNoCase(name, itemPtr->name))
 	{
 		return itemPtr;
 	}
@@ -255,80 +256,6 @@ CConfigOperator::~CConfigOperator()
 }
 
 /************************************************************************************
-* @description:忽略大小写比较字符串
-* @param x:需要比较的字符串
-* @param y:需要比较的字符串
-* @return:true 相等;false 不相等
-* @author:quhangfei
-* @date:2020年06月18日
-* @others:null 
-History:
-1.Date: 
-Author:  
-Modification: 
-************************************************************************************/
-bool CommonFunction::StringCompareNoCase(const std::string& x, const std::string& y)
-{
-	std::string::const_iterator p = x.begin();
-	std::string::const_iterator q = y.begin();
-
-	// 遍历对比每个字符
-	while (p != x.end() && q != y.end() && toupper(*p) == toupper(*q))
-	{
-		++p;
-		++q;
-	}
-
-	if (p == x.end()) // 如果x到结尾，y也到结尾则相等
-	{
-		return (q == y.end());
-	}
-
-	if (q == y.end()) // 如果x未到结尾，y到结尾返回false
-	{
-		return false;
-	}
-
-	// 如果x,y都没有到结尾，说明有不相同的字符，返回false
-	return false;
-}
-
-/************************************************************************************
-* @description:Utf8转Ansi
-* @param _utf8:需要转换的utf-8字符串
-* @return:ansi字符串 
-* @author:quhangfei
-* @date:2020年06月18日
-* @others:null 
-History:
-1.Date: 
-Author:  
-Modification: 
-************************************************************************************/
-const std::string CommonFunction::Utf8ToAnsi(const char* _utf8)
-{
-	USES_CONVERSION;
-	std::string ansi;
-	if (!_utf8)
-	{
-		return ansi;
-	}
-
-	//将utf-8转换成unicode码
-	int len = MultiByteToWideChar(CP_UTF8, 0, _utf8, (int)strlen(_utf8),NULL, NULL);
-	WCHAR *pwText = new WCHAR[len + 1];
-	wmemset(pwText, 0, len + 1);
-	MultiByteToWideChar(CP_UTF8, 0, _utf8, (int)strlen(_utf8),pwText, len);
-
-	//将unicode码转换成ansi
-	ansi.assign(T2A(pwText));
-
-	delete pwText;
-
-	return ansi;
-}
-
-/************************************************************************************
 * @description:根据xml名称和节点路径获取节点结构
 * @param xml:xml名称
 * @param node_path:节点路径
@@ -343,11 +270,11 @@ Modification:
 ************************************************************************************/
 CONFIG_XML_OPERATOR_API const XmlConstruct::ItemPtr CXOAPI_GetNode(const char* xml, const char* node_path)
 {
-	if ((!xml) || (!node_path))
+	if (!xml)
 	{
 		return NULL;
 	}
-	
+
 	//在已解析的XML里找
 	std::vector<CConfigXmlOperator*>::iterator iter = g_config_operator.g_xml_config_data.begin();
 	for (;iter != g_config_operator.g_xml_config_data.end(); ++iter)
@@ -377,6 +304,12 @@ CONFIG_XML_OPERATOR_API const XmlConstruct::ItemPtr CXOAPI_GetNode(const char* x
 		ptr = *iter;
 	}
 
+	//如果路径为默认值NULL，则表示返回整个XML结构
+	if (!node_path)
+	{
+		return ptr->m_xml_construct->item;
+	}
+
 	return CConfigXmlOperator::GetXml(std::string(node_path), ptr->m_xml_construct);
 }
 
@@ -397,6 +330,7 @@ CONFIG_XML_OPERATOR_API const XmlConstruct::ItemPtr CXOAPI_GetNode(const XmlCons
 {
 	return CConfigXmlOperator::GetNode(std::string(node_path), node);
 }
+
 /************************************************************************************
 * @description:根据xml名称、节点路径和属性名称获取属性值
 * @param xml:xml名称
@@ -424,16 +358,16 @@ CONFIG_XML_OPERATOR_API const char* CXOAPI_GetValue(const char* xml, const char*
 	{
 		return NULL;
 	}
-	
+
 	//根据获取的结构，在其属性中查找
 	for (std::map<std::string, std::string>::iterator iter = ptr->attributes.begin();
 		iter != ptr->attributes.end(); ++iter)
 	{
-		if (CommonFunction::StringCompareNoCase(iter->first,name))
+		if (CFLAPI_StringCompareNoCase(iter->first,name))
 		{
 			return iter->second.c_str();
 		}
 	}
-	
+
 	return NULL;
 }
